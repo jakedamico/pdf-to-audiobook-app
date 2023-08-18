@@ -13,31 +13,42 @@ class PDFViewerWindow(QMainWindow):
         self.filepath = filepath
         self.pdf_document = fitz.open(filepath)
         self.current_page_num = 0
+        self.coordinates_dialog = None  # Store the instance of the CoordinatesInputDialog
         self.init_ui()
 
     def init_ui(self):
-        self.setGeometry(100, 100, 800, 600)
+        screen_geometry = QApplication.desktop().screenGeometry()
+        self.setGeometry(screen_geometry)
         self.setWindowTitle("PDF Viewer")
 
         layout = QVBoxLayout()
         self.image_label = QLabel(self)
         layout.addWidget(self.image_label)
+        
+        side_panel = QVBoxLayout()
 
         prev_button = QPushButton("Previous", self)
+        prev_button.setMaximumWidth(100) 
         prev_button.clicked.connect(self.show_previous_page)
-        layout.addWidget(prev_button)
+        side_panel.addWidget(prev_button)
 
         next_button = QPushButton("Next", self)
+        next_button.setMaximumWidth(100)
         next_button.clicked.connect(self.show_next_page)
-        layout.addWidget(next_button)
+        side_panel.addWidget(next_button)
 
         extract_button = QPushButton("Extract Text", self)
+        extract_button.setMaximumWidth(100)
         extract_button.clicked.connect(self.extract_text)
-        layout.addWidget(extract_button)
+        side_panel.addWidget(extract_button)
 
         coordinates_button = QPushButton("Add Coordinates", self)
+        coordinates_button.setMaximumWidth(120)
         coordinates_button.clicked.connect(self.show_coordinates_dialog)
-        layout.addWidget(coordinates_button)
+        side_panel.addWidget(coordinates_button)
+        
+        layout.addLayout(side_panel)
+        layout.setStretchFactor(self.image_label, 1)
 
         central_widget = QWidget(self)
         central_widget.setLayout(layout)
@@ -46,8 +57,8 @@ class PDFViewerWindow(QMainWindow):
         self.show_page()
 
     def show_coordinates_dialog(self):
-        dialog = CoordinatesInputDialog(self)
-        dialog.exec_()
+        self.coordinates_dialog = CoordinatesInputDialog(self)
+        self.coordinates_dialog.exec_()
 
     def show_page(self):
         page = self.pdf_document[self.current_page_num]
@@ -68,10 +79,9 @@ class PDFViewerWindow(QMainWindow):
 
     def extract_text(self):
         coordinates = []
-        dialog = CoordinatesInputDialog(self)
-        if dialog.exec_():
-            coordinates = dialog.get_coordinates()
-        
+        if self.coordinates_dialog is not None:
+            coordinates = self.coordinates_dialog.get_coordinates()
+
         if coordinates:
             extracted_text = ""
             for coord in coordinates:
