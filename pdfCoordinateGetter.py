@@ -5,6 +5,8 @@ from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtCore import Qt
 
 pdfName = 'Fooled-by-Randomness-Role-of-Chance-in-Markets-and-Life-PROPER1.pdf'
+page_width = 419.5
+page_height = 595.25
 
 class PDFViewer(QMainWindow):
     def __init__(self):
@@ -110,4 +112,3 @@ if __name__ == "__main__":
     viewer = PDFViewer()
     viewer.show()
     sys.exit(app.exec_())
-
