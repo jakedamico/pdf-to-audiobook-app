@@ -24,6 +24,7 @@ from gtts import gTTS
 import os
 import re
 from TTS.api import TTS
+import nextTextToAudio
 
 def extract_text_by_area(page, rect):
     return page.get_text("text", clip=rect)
@@ -91,16 +92,13 @@ extracted_text = get_text_with_area_extraction(filepath, start_page, end_page, r
 
 #print(extracted_text)
 
-#Google TTS
-#tts = gTTS(text=extracted_text, lang='en')
+#coqui tts
+# tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC", progress_bar=True, gpu=False)
 
+# output_audio_path = 'extracted_text_audio_tts.mp3'
+# tts.tts_to_file(text=extracted_text, file_path=output_audio_path)
 
-#model_name = TTS.list_models()[0]
-#print(model_name)
-tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC", progress_bar=True, gpu=False)
+nextTextToAudio.text_to_speech(extracted_text)
 
-output_audio_path = 'extracted_text_audio_tts.mp3'
-tts.tts_to_file(text=extracted_text, file_path=output_audio_path)
-
-print(f"Text-to-speech audio saved as: {output_audio_path}")
+print(f"Text-to-speech audio finished processing")
 
