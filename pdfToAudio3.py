@@ -32,13 +32,25 @@ def get_text_with_area_extraction(filepath: str, start_page: int, end_page: int,
         extracted_text = ""
         for page_num in range(start_page, end_page + 1):
             page = doc[page_num]
-            extracted_text += extract_text_by_area(page, x0, y0, x1, y1).replace('\n', ' ').strip()
+            #extracted_text += extract_text_by_area(page, x0, y0, x1, y1).replace('\n', ' ').strip()
+            extracted_text += page.get_text().replace('\n', ' ').strip()
         
         standardized_text = re.sub(r'\s+', ' ', extracted_text)
         return standardized_text
+    
+def get_pdf_dimensions(pdf_path, page_num):
+    doc = fitz.open(pdf_path)
+    
+    page = doc[page_num]
+    page_width = str(page.rect.width)
+    page_height = str(page.rect.height)
+    
+    doc.close()
+    print(f"{page_width}, {page_height}")
 
 # Get user input for file path, page range, and text area coordinates
 filepath = 'Fooled-by-Randomness-Role-of-Chance-in-Markets-and-Life-PROPER1.pdf'
+get_pdf_dimensions(filepath, 27)
 start_page = int(input("Enter the starting page: ")) - 1
 end_page = int(input("Enter the ending page: ")) - 1
 
@@ -47,7 +59,7 @@ end_page = int(input("Enter the ending page: ")) - 1
 # x1 = float(input("Enter the x-coordinate of the bottom-right corner: "))
 # y1 = float(input("Enter the y-coordinate of the bottom-right corner: "))
 
-x0, y0, x1, y1 = 100, 200, 300, 400
+x0, y0, x1, y1 = 0, 419.5, 595.25, 0
 
 # Call the function to extract text within the specified page range and area
 extracted_text = get_text_with_area_extraction(filepath, start_page, end_page, x0, y0, x1, y1)
