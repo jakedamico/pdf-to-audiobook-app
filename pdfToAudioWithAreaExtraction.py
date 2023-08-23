@@ -67,6 +67,9 @@ def calculate_text_area_full_border(page_width, page_height, border_size):
     
     return rect
 
+def count_characters(input_string):
+    return len(input_string)
+
 def calculate_text_area_top_border(page_width, page_height, border_size):
     
     rect = (
@@ -89,8 +92,8 @@ percentage = float(input("Enter the percentage of the border to remove (e.g., 0.
 rect = calculate_text_area_top_border(page_width, page_height, percentage)
 
 extracted_text = get_text_with_area_extraction(filepath, start_page, end_page, rect)
-
-#print(extracted_text)
+print(count_characters(extracted_text))
+print(extracted_text)
 
 #coqui tts
 # tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC", progress_bar=True, gpu=False)
